@@ -1,8 +1,9 @@
 let curX;
 let curY;
-let itemW = 40;
-const width = 1100;
-const height = 600;
+let charW = 20.0;
+let itemW = 30.0;
+const width = 1100.0;
+const height = 600.0;
 let barriers = [];
 let player;
 
@@ -10,54 +11,49 @@ class Player {
     constructor(x, y, it) {
         this.x = x;
         this.y = y;
+        this.vec = createVector(0,0)
         this.it = it;
+        this.bounce = 0;
     }
 
-    update(x, y) {
-        this.x = x;
-        this.y = y;
-        rect(x, y, itemW, itemW);
+    update() {
+        if(this.it){
+            this.x += this.vec.x;
+            this.y += this.vec.y;
+        }
     }
+
     intersects(block) {
-        let blockX = block.x * 40;
-        let blockY = block.y * 40;
-        let shift = 5;
+        let blockX = block.x * itemW;
+        let blockY = block.y * itemW;
 
         if (
             blockX <= this.x &&
-            this.x <= blockX + itemW &&
+            this.x <= blockX + charW &&
             blockY <= this.y &&
             this.y <= blockY + itemW
         ) {
-            this.x = this.x + shift;
-            this.y = this.y + shift;
             return true;
         } else if (
-            blockX <= this.x + itemW &&
-            this.x + itemW <= blockX + itemW &&
+            blockX <= this.x + charW &&
+            this.x + charW <= blockX + itemW &&
             blockY <= this.y &&
             this.y <= blockY + itemW
         ) {
-            this.x = this.x - shift;
-            this.y = this.y + shift;
             return true;
         } else if (
             blockX <= this.x &&
             this.x <= blockX + itemW &&
-            blockY <= this.y + itemW &&
-            this.y + itemW <= blockY + itemW
+            blockY <= this.y + charW &&
+            this.y + charW <= blockY + itemW
         ) {
-            this.x = this.x + shift;
-            this.y = this.y - shift;
             return true;
         } else if (
-            blockX <= this.x + itemW &&
-            this.x + itemW <= blockX + itemW &&
-            blockY <= this.y + itemW &&
-            this.y + itemW <= blockY + itemW
+            blockX <= this.x + charW &&
+            this.x + charW <= blockX + itemW &&
+            blockY <= this.y + charW &&
+            this.y + charW <= blockY + itemW
         ) {
-            this.x = this.x - shift;
-            this.y = this.y - shift;
             return true;
         }
         else{
@@ -78,22 +74,33 @@ class Player {
     }
 
     draw(){
-        let vec = createVector(mouseX - this.x, mouseY - this.y);
-        vec.normalize();
-        vec.mult(5);
-        let newX = this.x + vec.x;
-        let newY = this.y + vec.y;
-        if(this.it && !this.intersect()){
-            this.update(newX, newY);
+        //One possible bug is caught bouncing between two walls
+        if(this.it && this.intersect() && this.bounce == 0){
+            this.bounce = 30;
+            this.vec.normalize();
+            this.vec.mult(-1);
+        }
+        if(this.bounce == 0){
+            this.vec.set(mouseX-this.x,mouseY-this.y);
+            this.vec.mult(1/35);
+            this.update();
+            rect(this.x,this.y,charW,charW);
         }
         else{
-            this.update(this.x,this.y);
+            this.bounce = this.bounce - 1;
+            this.update();
+            rect(this.x,this.y,charW,charW);
         }
     }
 
     tag(player){
-        let block = {x : player.x/40, y : player.y/40};
+        let block = {x : player.x/itemW, y : player.y/itemW};
         if(this.it && this.intersects(block)){
+            //This runs into problems when you run head on into other player
+            this.vec.normalize();
+            this.vec.mult(-3);
+            this.update();
+            rect(this.x,this.y,charW,charW);
             player.it = true;
             this.it = false;
         }
@@ -106,11 +113,11 @@ function randomNum(min, max) {
 }
 
 function randomBlock(min, max) {
-    return Math.round(randomNum(min, max) / 40);
+    return Math.round(randomNum(min, max) / itemW);
 }
 
 function offscreen() {
-    if (this.y < -40 || this.y > height + 40) return true;
+    if (this.y < -itemW || this.y > height + itemW) return true;
     else return false;
 }
 
@@ -125,12 +132,12 @@ function setup() {
     curY = 50;
 
     //Initialize barriers
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 25; i++) {
         randomX = randomBlock(0, width);
         randomY = randomBlock(0, height);
         let blocks = [{ x: randomX, y: randomY }];
 
-        for (let j = 0; j < 4; j++) {
+        for (let j = 0; j < 5; j++) {
             randomDir = randomNum(0, 3);
             let nextX = randomX;
             let nextY = randomY;

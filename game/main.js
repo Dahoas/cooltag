@@ -11,7 +11,7 @@ class Player {
     constructor(x, y, it) {
         this.x = x;
         this.y = y;
-        this.vec = createVector(0,0)
+        this.vec = createVector(0,0);
         this.it = it;
         this.bounce = 0;
     }

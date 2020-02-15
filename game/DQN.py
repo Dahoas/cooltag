@@ -23,7 +23,7 @@ class DQNAgent(object):
         self.actual = []
         self.memory = []
 
-    def get_state(self, game, player, food):
+    def get_state(self, game, player):
 
         state = [
             (player.x_change == 20 and player.y_change == 0 and ((list(map(add, player.position[-1], [20, 0])) in player.position) or

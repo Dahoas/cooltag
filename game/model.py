@@ -8,15 +8,15 @@ import seaborn as sns
 import numpy as np
 
 # Set options to activate or deactivate the game view, and its speed
-display_option = False
-speed = 0
+display_option = True
+speed = 50
 pygame.font.init()
-
 
 class Game:
 
+    state = [player_one, player_two, board]
     def __init__(self, game_width, game_height):
-        pygame.display.set_caption('SnakeGen')
+        pygame.display.set_caption('Tag')
         self.game_width = game_width
         self.game_height = game_height
         self.gameDisplay = pygame.display.set_mode((game_width, game_height+60))

@@ -6,11 +6,10 @@ class Player:
     velocity = [0,0]
     acceleration = [0,0]
 
-<<<<<<< HEAD
-  
-=======
     def __init__(self, x, y):
         self.position = [x, y]
+        self.image = pygame.image.load('img/snakeBody.png')
+
 
     def speed(self):
         return (self.velocity[0]**2 + self.velocity[1]**2)**(1/2)
@@ -18,11 +17,13 @@ class Player:
     def update_pos(self):
         if (self.tagged):
             self.velocity = self.velocity + self.acceleration
-            self.position = self.position * self.velocity
+            if(self.speed() > 100):
+                self.velocity = (self.velocity/speed())*100
+            self.position = self.position + self.velocity
+
 
     def choose_accel(self):
         self.acceleration = [1,1]
->>>>>>> f86ddaf1e1c7e34a0ad70b56db96a11b2d417f6b
 
     # def move(self, x, y):
     #     self.x = x
@@ -34,10 +35,6 @@ class Player:
             self.bounce = 30
             self.acceleration = self.acceleration * -1
         if (self.bounce == 0):
-            self.velocity = self.velocity + self.acceleration
-            if(self.speed() > 100):
-                self.velocity = (self.velocity/speed())*100
-            # self.update();
             self.update_pos()
                         
         else:
@@ -45,7 +42,9 @@ class Player:
             # this.update();
             self.update_pos()
             
-                    
+    def display_player(self):         
+        update_screen()
+                       
 
       
         

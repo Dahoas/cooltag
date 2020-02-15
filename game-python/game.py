@@ -37,23 +37,10 @@ class Game:
     def __init__(self):
         self.player1 = Player(12, 11)
         self.player2 = Player(3, 5)
-        self.moving = False
 
        
     def play_turn(self):
-
-      if (not self.moving):
-
-        # get new position (x, y)
-
-        # check sides 
-        if (x < 0)
-
         # self.player1.train_ml(self.game_board, player1, player2)
-
-
-
-
-      self.player1.move(self.game_board)
-      self.player2.move(self.game_board)
+      self.player1.update()
+      self.player2.update()
 

@@ -2,30 +2,695 @@ let curX;
 let curY;
 let charW = 20.0;
 let itemW = 30.0;
-const width = 1100.0;
-const height = 600.0;
+const width = 30 * itemW;
+const height = 20 * itemW;
 let barriers = [];
 let player;
+
+const board = [
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+    ],
+    [
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+    ],
+    [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+    ]
+];
 
 class Player {
     constructor(x, y, it) {
         this.x = x;
         this.y = y;
-        this.vec = createVector(0,0);
+        this.vec = createVector(0, 0);
         this.it = it;
         this.bounce = 0;
+        this.score = 0;
     }
 
     update() {
-        if(this.it){
+        if (this.it) {
             this.x += this.vec.x;
             this.y += this.vec.y;
+            this.score += 1;
         }
     }
 
-    intersects(block) {
-        let blockX = block.x * itemW;
-        let blockY = block.y * itemW;
+    intersectsPlayer(player) {
+        let blockX = player.x * itemW;
+        let blockY = player.y * itemW;
 
         if (
             blockX <= this.x &&
@@ -55,110 +720,75 @@ class Player {
             this.y + charW <= blockY + itemW
         ) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    intersect(){
-        let flag = false;
-        for (const barrier of barriers) {
-            for (const block of barrier) {
-                if(this.intersects(block)){
-                    flag = true;
-                }
-            }
+    intersect() {
+        const posX =
+            this.vec.heading() < 0
+                ? Math.floor(this.x / itemW)
+                : Math.round(this.x / itemW);
+        const posY =
+            this.vec.heading() < 0
+                ? Math.floor(this.y / itemW)
+                : Math.round(this.y / itemW);
+
+        let boardPos;
+
+        try {
+            return !board[posX][posY];
+        } catch {
+            return true;
         }
-        return flag;
     }
 
-    draw(){
+    draw() {
+        if (this.it) {
+            fill(255, 255, 0);
+        } else {
+            fill(255);
+        }
         //One possible bug is caught bouncing between two walls
-        if(this.it && this.intersect() && this.bounce == 0){
+        if (this.it && this.intersect() && this.bounce == 0) {
             this.bounce = 30;
             this.vec.normalize();
             this.vec.mult(-1);
         }
-        if(this.bounce == 0){
-            this.vec.set(mouseX-this.x,mouseY-this.y);
-            this.vec.mult(1/35);
+        if (this.bounce == 0) {
+            this.vec.set(mouseX - this.x, mouseY - this.y);
+            this.vec.mult(1 / 35);
             this.update();
-            rect(this.x,this.y,charW,charW);
-        }
-        else{
+            rect(this.x, this.y, charW, charW);
+        } else {
             this.bounce = this.bounce - 1;
             this.update();
-            rect(this.x,this.y,charW,charW);
+            rect(this.x, this.y, charW, charW);
         }
     }
 
-    tag(player){
-        let block = {x : player.x/itemW, y : player.y/itemW};
-        if(this.it && this.intersects(block)){
+    tag(player) {
+        let playerBlock = { x: player.x / itemW, y: player.y / itemW };
+        if (this.it && this.intersectsPlayer(playerBlock)) {
             //This runs into problems when you run head on into other player
             this.vec.normalize();
             this.vec.mult(-3);
             this.update();
-            rect(this.x,this.y,charW,charW);
+            rect(this.x, this.y, charW, charW);
             player.it = true;
             this.it = false;
         }
     }
-
-}
-
-function randomNum(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function randomBlock(min, max) {
-    return Math.round(randomNum(min, max) / itemW);
-}
-
-function offscreen() {
-    if (this.y < -itemW || this.y > height + itemW) return true;
-    else return false;
 }
 
 function setup() {
     //Initialize players
-    player1 = new Player(40,40,true);
-    player2 = new Player(1000,500,false);
+    player1 = new Player(40, 40, true);
+    player2 = new Player(width - 200, 300, false);
     canvas = createCanvas(width, height);
     background(50);
     noStroke();
-    curX = 50;
-    curY = 50;
-
-    //Initialize barriers
-    for (let i = 0; i < 25; i++) {
-        randomX = randomBlock(0, width);
-        randomY = randomBlock(0, height);
-        let blocks = [{ x: randomX, y: randomY }];
-
-        for (let j = 0; j < 5; j++) {
-            randomDir = randomNum(0, 3);
-            let nextX = randomX;
-            let nextY = randomY;
-
-            switch (randomDir) {
-                case 0:
-                    nextX = randomX + 1;
-                case 1:
-                    nextX = randomX - 1;
-                case 2:
-                    nextY = randomY + 1;
-                case 3:
-                    nextY = randomY - 1;
-            }
-            randomX = nextX;
-            randomY = nextY;
-            blocks.push({ x: nextX, y: nextY });
-        }
-        barriers.push(blocks);
-    }
-
 }
 
 function draw() {
@@ -166,15 +796,23 @@ function draw() {
     fill(255);
 
     // draw barriers
-    for (const barrier of barriers) {
-        for (const block of barrier) {
-            rect(block.x * itemW, block.y * itemW, itemW, itemW);
+    for (let x = 0; x < board.length; x++) {
+        for (let y = 0; y < board[x].length; y++) {
+            if (!board[x][y]) {
+                rect(x * itemW, y * itemW, itemW, itemW);
+            }
         }
     }
 
     //Draw player and calculate movement
     player1.draw();
     player2.draw();
+
+    // draw player's scores
+    fill(255);
+    text(player1.score, 50, 50);
+    text(player2.score, width - 75, 50);
+
     player1.tag(player2);
     player2.tag(player1);
     //line(mouseX, 0, mouseX, 100);

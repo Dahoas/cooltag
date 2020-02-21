@@ -16,31 +16,26 @@ def display_ui(game):
     game.gameDisplay.blit(text_highest, (190, 440))
     game.gameDisplay.blit(game.bg, (10, 10))
 
-def display(player, food, game, record):
+def display(game):
     game.gameDisplay.fill((255, 255, 255))
+    player1 = game.state[0]
+    player2 = game.state[1]
     display_ui(game, game.score, record)
-    player.display_player(player.position[-1][0], player.position[-1][1], player.food, game)
-    food.display_food(food.x_food, food.y_food, game)
+    player1.display_player(game)
+    player2.display_player(game)
 
 def update_screen():
     pygame.display.update() 
 
-def initialize_game(player, game, food, agent):
-    state_init1 = agent.get_state(game, player, food)  # [0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0]
+def initialize_game(game):
+	#what is this action for?
     action = [1, 0, 0]
-    player.do_move(action, player.x, player.y, game, food, agent)
-    state_init2 = agent.get_state(game, player, food)
+    player1 = game.state[0]
+    player2 = game.state[1]
+    player1.update(game)
     reward1 = agent.set_reward(player, game.crash)
     agent.remember(state_init1, action, reward1, state_init2, game.crash)
-    agent.replay_new(agent.memory)  
-
-
-def plot_seaborn(array_counter, array_score):
-    sns.set(color_codes=True)
-    ax = sns.regplot(np.array([array_counter])[0], np.array([array_score])[0], color="b", x_jitter=.1, line_kws={'color':'green'})
-    ax.set(xlabel='games', ylabel='score')
-    plt.show()
-
+    agent.replay_new(agent.memory)
 
 def run():
     pygame.init()
@@ -52,20 +47,20 @@ def run():
     while counter_games < 150:
         # Initialize classes
         game = Game(440, 440)
-        player1 = game.player
-        food1 = game.food
+        player1 = game.state[0]
+        player2 = game.state[1]
 
         # Perform first move
         initialize_game(player1, game, food1, agent)
         if display_option:
-            display(player1, food1, game, record)
+            display(game)
 
         while not game.crash:
             #agent.epsilon is set to give randomness to actions
             agent.epsilon = 80 - counter_games
             
             #get old state
-            state_old = agent.get_state(game, player1, food1)
+            state_old = agent.get_state(game)
             
             #perform random actions based on agent.epsilon, or choose the action
             if randint(0, 200) < agent.epsilon:
@@ -98,7 +93,5 @@ def run():
         score_plot.append(game.score)
         counter_plot.append(counter_games)
     agent.model.save_weights('weights.hdf5')
-    plot_seaborn(counter_plot, score_plot)
-
 
 run()

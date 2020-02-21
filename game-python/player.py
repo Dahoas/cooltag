@@ -5,11 +5,17 @@ class Player:
     position = [0,0]
     velocity = [0,0]
     acceleration = [0,0]
+    it = False
 
-    def __init__(self, x, y):
+    #State is 1. board(barrier positioning)
+    #         2. Player 1 info
+    #         3. Player 2 info
+    #         4. Reward function is time tagged
+
+    def __init__(self, x, y, it):
         self.position = [x, y]
-        self.image = pygame.image.load('img/snakeBody.png')
-
+        self.it = it
+        #self.image = pygame.image.load('img/snakeBody.png')
 
     def speed(self):
         return (self.velocity[0]**2 + self.velocity[1]**2)**(1/2)
@@ -21,13 +27,8 @@ class Player:
                 self.velocity = (self.velocity/speed())*100
             self.position = self.position + self.velocity
 
-
     def choose_accel(self):
         self.acceleration = [1,1]
-
-    # def move(self, x, y):
-    #     self.x = x
-    #     self.y = y
 
     def update(self):
         self.choose_accel()

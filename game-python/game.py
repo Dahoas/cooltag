@@ -34,14 +34,16 @@ class Game:
                   [True, True, True, True, True, True, True, True, True, True, True, True, True, True, False, False, True, True, False, False],
                   [True, True, True, True, True, True, True, False, False, True, True, True, True, False, False, False, True, True, False, False]]
 
-    def __init__(self):
-        self.player1 = Player(12, 11)
-        self.player2 = Player(3, 5)
+    state = [player_one, player_two, board]
 
-       
-    def play_turn(self):
-        # self.player1.train_ml(self.game_board, player1, player2)
-      self.player1.update()
-      self.player2.update()
+    def __init__(self, game_width, game_height):
+        pygame.display.set_caption('Tag')
+        self.game_width = game_width
+        self.game_height = game_height
+        self.gameDisplay = pygame.display.set_mode((game_width, game_height+60))
+        self.bg = pygame.image.load("img/background.png")
+        self.state[0] = Player(self,0,0,True)
+        self.state[1] = Player(self,40,40,False)
+        #Board is filled with barrier info, if we have that
 
 

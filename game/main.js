@@ -1,819 +1,96 @@
-let curX;
-let curY;
-let charW = 20.0;
-let itemW = 30.0;
-const width = 30 * itemW;
-const height = 20 * itemW;
-let barriers = [];
-let player;
+const express = require("express");
+const request = require("request");
+const path = require("path");
+const sqrl = require("squirrelly");
+const { uuid } = require("uuidv4");
+const app = express();
+const port = 3000;
 
-const board = [
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-    ],
-    [
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false
-    ],
-    [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false
-    ]
-];
+app.set("view engine", "squirrelly");
+app.set("views", "./views");
 
-class Player {
-    constructor(x, y, it) {
-        this.x = x;
-        this.y = y;
-        this.vec = createVector(0, 0);
-        this.it = it;
-        this.bounce = 0;
-        this.score = 0;
-    }
+let playerQueue = [];
+let startedGames = {};
 
-    update() {
-        if (this.it) {
-            this.x += this.vec.x;
-            this.y += this.vec.y;
-            this.score += 1;
+app.use("/static", express.static("static"));
+
+app.get("/", (req, res) =>
+    res.sendFile(path.join(__dirname + "/templates/index.html"))
+);
+
+// player has been added to the queue and is waiting for another player to join
+app.get("/join/:id", (req, res) => {
+    let found = undefined;
+    // find the p1 (player waiting will always be p1 in a game)
+    for (const gameId in startedGames) {
+        const game = startedGames[gameId];
+        if (game.p1 === req.params.id) {
+            found = game;
+            break;
         }
     }
 
-    intersectsPlayer(player) {
-        let blockX = player.x * itemW;
-        let blockY = player.y * itemW;
-
-        if (
-            blockX <= this.x &&
-            this.x <= blockX + charW &&
-            blockY <= this.y &&
-            this.y <= blockY + itemW
-        ) {
-            return true;
-        } else if (
-            blockX <= this.x + charW &&
-            this.x + charW <= blockX + itemW &&
-            blockY <= this.y &&
-            this.y <= blockY + itemW
-        ) {
-            return true;
-        } else if (
-            blockX <= this.x &&
-            this.x <= blockX + itemW &&
-            blockY <= this.y + charW &&
-            this.y + charW <= blockY + itemW
-        ) {
-            return true;
-        } else if (
-            blockX <= this.x + charW &&
-            this.x + charW <= blockX + itemW &&
-            blockY <= this.y + charW &&
-            this.y + charW <= blockY + itemW
-        ) {
-            return true;
-        } else {
-            return false;
-        }
+    if (found !== undefined && found.game) {
+        res.redirect(`/game/${found.game}/player/${found.p1}`);
+    } else {
+        res.render("lobby", {
+            player: req.params.id
+        });
     }
+});
 
-    intersect() {
-        const posX =
-            this.vec.heading() < 0
-                ? Math.floor(this.x / itemW)
-                : Math.round(this.x / itemW);
-        const posY =
-            this.vec.heading() < 0
-                ? Math.floor(this.y / itemW)
-                : Math.round(this.y / itemW);
+// join the server, add the player to the queue or create a new game if there
+// is already a player ready
+app.get("/join", (req, res) => {
+    const player = uuid();
+    playerQueue.push(player);
 
-        let boardPos;
-
-        try {
-            return !board[posX][posY];
-        } catch {
-            return true;
-        }
+    if (playerQueue.length >= 2) {
+        const newGame = uuid();
+        const p2 = playerQueue.pop();
+        const p1 = playerQueue.pop();
+        const gameObj = {
+            game: newGame,
+            p1: p1,
+            p2: p2,
+            p1x: 50,
+            p1y: 50,
+            p2x: 500,
+            p2y: 300
+        };
+        startedGames[newGame] = gameObj;
+        res.redirect(`/game/${newGame}/player/${p2}`);
+    } else {
+        res.render("lobby", {
+            player: player
+        });
     }
+});
 
-    draw() {
-        if (this.it) {
-            fill(255, 255, 0);
-        } else {
-            fill(255);
-        }
-        //One possible bug is caught bouncing between two walls
-        if (this.it && this.intersect() && this.bounce == 0) {
-            this.bounce = 30;
-            this.vec.normalize();
-            this.vec.mult(-1);
-        }
-        if (this.bounce == 0) {
-            this.vec.set(mouseX - this.x, mouseY - this.y);
-            this.vec.mult(1 / 35);
-            this.update();
-            rect(this.x, this.y, charW, charW);
-        } else {
-            this.bounce = this.bounce - 1;
-            this.update();
-            rect(this.x, this.y, charW, charW);
-        }
+// get the information needed by the script to run the game
+app.get("/game/:id/player/:pid/json", (req, res) => {
+    res.json(startedGames[req.params.id]);
+});
+
+// start a game (requires two players)
+app.get("/game/:id/player/:pid", (req, res) => {
+    res.render("game", {
+        player: req.params.pid,
+        game: req.params.id
+    });
+    // res.sendFile(path.join(__dirname + "/templates/game.html"));
+});
+
+//
+app.post("/game/:id/player/:pid/x/:x/y/:y", (req, res) => {
+    console.log("got post", req.params.x, req.params.y);
+    if (startedGames[req.params.id].p1 === req.params.pid) {
+        startedGames[req.params.id].p1x = req.params.x;
+        startedGames[req.params.id].p1y = req.params.y;
+    } else {
+        startedGames[req.params.id].p2x = req.params.x;
+        startedGames[req.params.id].p2y = req.params.y;
     }
+});
 
-    tag(player) {
-        let playerBlock = { x: player.x / itemW, y: player.y / itemW };
-        if (this.it && this.intersectsPlayer(playerBlock)) {
-            //This runs into problems when you run head on into other player
-            this.vec.normalize();
-            this.vec.mult(-3);
-            this.update();
-            rect(this.x, this.y, charW, charW);
-            player.it = true;
-            this.it = false;
-        }
-    }
-}
-
-function setup() {
-    //Initialize players
-    player1 = new Player(40, 40, true);
-    player2 = new Player(width - 200, 300, false);
-    canvas = createCanvas(width, height);
-    background(50);
-    noStroke();
-}
-
-function draw() {
-    background(50);
-    fill(255);
-
-    // draw barriers
-    for (let x = 0; x < board.length; x++) {
-        for (let y = 0; y < board[x].length; y++) {
-            if (!board[x][y]) {
-                rect(x * itemW, y * itemW, itemW, itemW);
-            }
-        }
-    }
-
-    //Draw player and calculate movement
-    player1.draw();
-    player2.draw();
-
-    // draw player's scores
-    fill(255);
-    text(player1.score, 50, 50);
-    text(player2.score, width - 75, 50);
-
-    player1.tag(player2);
-    player2.tag(player1);
-    //line(mouseX, 0, mouseX, 100);
-}
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));

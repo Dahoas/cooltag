@@ -1,0 +1,18 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "Wow very cool game",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christian Broms, Alex Havrilla",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "squirrelly": "^7.9.1",
+    "uuidv4": "^6.0.2"
+  }
+}
